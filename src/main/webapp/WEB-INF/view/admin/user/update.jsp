@@ -17,42 +17,45 @@
             </head>
 
             <body>
-                <div class="container mt-5">
-                    <h2>Update User</h2>
-                    <!-- Form cập nhật người dùng -->
-                    <form:form method="POST" modelAttribute="user" action="/admin/user/update/${user.id}">
+                <%@ include file="/WEB-INF/view/admin/layout/header.jsp" %>
+                    <%@ include file="/WEB-INF/view/admin/layout/silebar.jsp" %>
+                        <div class="container mt-5" style="margin-left: 200px; padding: 0 100px 0;">
+                            <h2>Update User</h2>
+                            <!-- Form cập nhật người dùng -->
+                            <form:form method="POST" modelAttribute="user" action="/admin/user/update/${user.id}">
 
-                        <!-- Trường ID ẩn -->
-                        <form:input type="hidden" path="id" />
+                                <!-- Trường ID ẩn -->
+                                <form:input type="hidden" path="id" />
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <form:input type="email" class="form-control" id="email" path="email" disabled="true" />
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <form:input type="email" class="form-control" id="email" path="email"
+                                        disabled="true" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <form:input type="password" class="form-control" id="password" path="password" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="fullName" class="form-label">Full Name</label>
+                                    <form:input type="text" class="form-control" id="fullName" path="fullName" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <form:input type="text" class="form-control" id="address" path="address" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <form:input type="text" class="form-control" id="phone" path="phone" />
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            </form:form>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <form:input type="password" class="form-control" id="password" path="password" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="fullName" class="form-label">Full Name</label>
-                            <form:input type="text" class="form-control" id="fullName" path="fullName" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Address</label>
-                            <form:input type="text" class="form-control" id="address" path="address" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone</label>
-                            <form:input type="text" class="form-control" id="phone" path="phone" />
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Cập nhật</button>
-                    </form:form>
-                </div>
             </body>
 
             </html>

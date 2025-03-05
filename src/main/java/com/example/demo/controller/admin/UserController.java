@@ -1,24 +1,32 @@
-package com.example.demo.controller;
+package com.example.demo.controller.admin;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.domain.User;
+import com.example.demo.service.UploadService;
 import com.example.demo.service.UserService;
 
 @Controller
 public class UserController {
     private final UserService userService;
+    private final UploadService uploadService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UploadService uploadService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.uploadService = uploadService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @RequestMapping("/")
@@ -26,11 +34,11 @@ public class UserController {
         return "hello controller";
     }
 
-    @RequestMapping("/admin/user")
+    @GetMapping("/admin/user")
     public String getUserPage(Model model) {
         List<User> users = this.userService.getAllUser();
         model.addAttribute("users", users);
-        return "admin/user/table-user";
+        return "admin/user/detail";
     }
 
     @RequestMapping("/admin/user/{id}")
@@ -41,10 +49,25 @@ public class UserController {
         return "admin/user/show";
     }
 
-    @RequestMapping("/admin/user/create")
+    @GetMapping("/admin/user/create")
     public String getCreateUserPage(Model model) {
         model.addAttribute("newUser", new User());
         return "admin/user/create";
+    }
+
+    @PostMapping(value = "/admin/user/create")
+    public String createUserPage(Model model,
+            @ModelAttribute("newUser") User chau03,
+            @RequestParam("imageUpload") MultipartFile file) {
+
+        String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
+        String hashPassword = this.passwordEncoder.encode(chau03.getPassword());
+
+        chau03.setAvatar(avatar);
+        chau03.setPassword(hashPassword);
+        chau03.setRole(this.userService.getRoleByName(chau03.getRole().getName()));
+        this.userService.handleSaveUser(chau03);
+        return "redirect:/admin/user";
     }
 
     @RequestMapping("/admin/user/update/{id}")
@@ -75,10 +98,4 @@ public class UserController {
         return "redirect:/admin/user";
     }
 
-    @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
-    public String createUserPage(Model model, @ModelAttribute("newUser") User chau03) {
-        System.out.println("run here" + chau03);
-        this.userService.handleSaveUser(chau03);
-        return "redirect:/admin/user";
-    }
 }
